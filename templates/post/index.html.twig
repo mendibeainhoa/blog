@@ -3,7 +3,32 @@
 {% block title %}Hello PostController!{% endblock %}
 
 {% block body %}
-{{form(form)}}
+{# {{form(form)}} #}
+<div class="mb-4">
+{{ form_start(form) }}
+    <div class="my-custom-class-for-errors">
+        {{ form_errors(form) }}
+    </div>
+        <div class="mb-1">
+            <label class="form-label">{{ field_label(form.title) }}</label>
+            {{ form_widget(form.title, {'attr': {'class': 'form_control'}}) }}
+        </div>
+        <div class="mb-1">
+            <label class="form-label">{{ field_label(form.type) }}</label>
+            {{ form_widget(form.type, {'attr': {'class': 'form_control'}}) }}
+        </div>        
+        <div class="mb-1">
+            <label class="form-label">{{ field_label(form.description) }}</label>
+            {{ form_widget(form.description, {'attr': {'class': 'form_control'}}) }}
+        </div>
+        <div class="mb-1">
+            <label class="form-label">{{ field_label(form.file) }}</label>
+            {{ form_widget(form.file, {'attr': {'class': 'form_control'}}) }}
+        </div>
+        {{ form_row(form.submit, { 'label': 'Submit me' }) }}
+{{ form_end(form) }}
+</div>
+
 {# {{dump(posts)}} #}
 
 <table>
