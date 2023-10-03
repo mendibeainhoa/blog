@@ -3,29 +3,21 @@
 {% block title %}Hello PostController!{% endblock %}
 
 {% block body %}
-{{form(form)}}
-{# {{dump(posts)}} #}
 
 <table>
     <thead>
         <tr>
-        <td>Id</td>
         <td>Título</td>
         <td>Descripción</td>
-        <td>Creation date</td>
         </tr>
     </thead>
     <tbody>
-    {% for post in posts %}
 
         <tr>
-        <td><a href="{{ path('postDetails', {id:post.id}) }}">Ver</a></td>
         <td>{{post.title}}</td>
         <td>{{post.description}}</td>
-        <td>{{post.creation_date|date}}</td>
 
         </tr>
-    {% endfor %}
     </tbody>
 
 </table>

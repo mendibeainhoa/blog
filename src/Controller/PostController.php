@@ -7,11 +7,12 @@ use App\Entity\User;
 use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\String\Slugger\SluggerInterface;
 class PostController extends AbstractController
 {
     private $em;
@@ -23,7 +24,7 @@ class PostController extends AbstractController
     }
 
     //CONSULTAS CON ENTITY A LA BBDD
-    // #[Route('/post/{id}', name: 'app_post')]
+    // #[Route('/post/{id}', name: 'postDetails')]
     // public function index($id): Response
     // {
     //      $posts = $this->em->getRepository(Post::class)->findAll(); //recupera todos los post que se hallan realizado
@@ -67,14 +68,39 @@ class PostController extends AbstractController
     //     return new JsonResponse(['success'=>true]);
     // }
 
-    //FORMULARIO
+    //FORMULARIO DE LOS POST DEL BLOG
     #[Route('/', name: 'app_post')]
-    public function index(Request $request): Response
+    public function index(Request $request, SluggerInterface $slugger): Response
     {
         $post = new Post();
+        $posts =$this->em->getRepository(Post::class)->findAllPosts(); //trae todos los posts de la bbdd
+
         $form =$this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()){ //en caso de que sea valido 
+            
+            $post->setCreationDate(new \DateTime()); //adquiere la fecha de creación del post
+           
+            $url = str_replace(' ', '-', $form->get('title')->getData()); // adquiere el titulo del post y se lo añade a la url
+            $post->setUrl($url);
+            
+            $file = $form->get('file')->getData();
+            if($file){ //si existe el archivo
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME); //adquiere el nombre original del archivo
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();//utiliza la libreria para cambiarle el nombre al archivo por seguridad
+                try {
+                    $file->move(
+                        $this->getParameter('files_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    throw new \Exception('Ups, ha habido un problema en la carga de los archivos');
+                }
+                $post->setFile($newFilename);
+
+            }
+
             $user=$this->em->getRepository(User::class)->find(1);
             $post->setUser($user);
             $this->em->persist($post);
@@ -82,8 +108,15 @@ class PostController extends AbstractController
             return $this->redirectToRoute('app_post');
         }
          return $this->render('post/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'posts' => $posts
          ]);
 
     }
+    #[Route('/post/{id}', name: 'postDetails')]
+     public function postDetails(Post $post){
+        return $this-> render('post/post-details.html.twig', ['post' => $post]);
+     }
+     
+     
 }
