@@ -1,7 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Registro{% endblock %}
 
 {% block body %}
-{{form(registration_form)}}
+
+<div class="mb-4 col-5 mt-3">
+    <h1 class="mb-3">Registrate</h1>
+    {{ form_start(registration_form) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(registration_form) }}
+        </div>
+            <div class="mb-1">
+            <label class="form-label">{{ field_label(registration_form.email) }}*</label>
+                {{ form_widget(registration_form.email, {'attr': {'class': 'form_control','placeholder': 'Añade tu email...'}}) }}
+            </div>
+            <div class="mb-1">
+            <label class="form-label">{{ field_label(registration_form.password) }}*</label>
+                {{ form_widget(registration_form.password, {'attr': {'class': 'form_control','placeholder': 'Añade tu password...'}}) }}
+            </div>
+            <div class="mb-1">
+            <label class="form-label">{{ field_label(registration_form.photo) }}</label>
+                {{ form_widget(registration_form.photo, {'attr': {'class': 'form_control','placeholder': 'Añade una foto...'}}) }}
+            </div>
+            <div class="mb-1">
+            <label class="form-label">{{ field_label(registration_form.description) }}</label>
+
+                {{ form_widget(registration_form.description, {'attr': {'class': 'form_control','placeholder': 'Escribe algo sobre ti...'}}) }}
+            </div>          
+   
+      
+        {{ form_row(registration_form.submit, { 'label': 'Regístrate' }) }}
+    {{ form_end(registration_form) }}
+</div>
 {% endblock %}

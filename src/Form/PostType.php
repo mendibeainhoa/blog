@@ -20,6 +20,7 @@ class PostType extends AbstractType
             ->add('title')
             ->add('type', ChoiceType::class, [
                 'choices'  => [
+                    'Seleccione una opinión'=> null,
                     'Opinion' => 'Opinion',
                     'Critica' => 'Critica',
                     'Humor' => 'Humor',
@@ -30,7 +31,7 @@ class PostType extends AbstractType
             ])
             ->add('description')
             ->add('file',FileType::class, [
-                'label'=>'photo',
+                'label'=>'Seleccione un archivo',
                 'required'=>false
                 
             ])

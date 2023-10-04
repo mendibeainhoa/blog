@@ -1,40 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PostController!{% endblock %}
+{% block title %}Bienvenido a mi blog!{% endblock %}
 
 {% block body %}
 {# {{form(form)}} #}
-<div class="mb-4">
-{{ form_start(form) }}
-    <div class="my-custom-class-for-errors">
-        {{ form_errors(form) }}
-    </div>
-        <div class="mb-1">
-            <label class="form-label">{{ field_label(form.title) }}</label>
-            {{ form_widget(form.title, {'attr': {'class': 'form_control'}}) }}
+<div class="mb-4 col-5 mt-3">
+    <h1 class="mb-3">Publica algo nuevo</h1>
+    {{ form_start(form) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
         </div>
-        <div class="mb-1">
-            <label class="form-label">{{ field_label(form.type) }}</label>
-            {{ form_widget(form.type, {'attr': {'class': 'form_control'}}) }}
+        <div class="row mb-2">
+            <div class="col">
+                {{ form_widget(form.title, {'attr': {'class': 'form_control','placeholder': 'Título'}}) }}
+            </div>
+            <div class="col">
+                {{ form_widget(form.type, {'attr': {'class': 'form_control'}}) }}
+            </div>        
         </div>        
-        <div class="mb-1">
-            <label class="form-label">{{ field_label(form.description) }}</label>
-            {{ form_widget(form.description, {'attr': {'class': 'form_control'}}) }}
+        <div class="mb-2">
+            {{ form_widget(form.description, {'attr': {'class': 'w-100 form_control','placeholder': 'Escriba aquí...'}}) }}
         </div>
-        <div class="mb-1">
+        <div class="mb-2">
             <label class="form-label">{{ field_label(form.file) }}</label>
             {{ form_widget(form.file, {'attr': {'class': 'form_control'}}) }}
         </div>
-        {{ form_row(form.submit, { 'label': 'Submit me' }) }}
-{{ form_end(form) }}
+        {{ form_row(form.submit, { 'label': 'Publicar' }) }}
+    {{ form_end(form) }}
 </div>
 
 {# {{dump(posts)}} #}
 
-<table>
+<table class=" mt-3">
     <thead>
         <tr>
-        <td>Id</td>
+        <td></td>
         <td>Título</td>
         <td>Descripción</td>
         <td>Creation date</td>
@@ -47,7 +47,7 @@
         <td><a href="{{ path('postDetails', {id:post.id}) }}">Ver</a></td>
         <td>{{post.title}}</td>
         <td>{{post.description}}</td>
-        <td>{{post.creation_date|date}}</td>
+        <td>{{post.creation_date|date("d/m/Y")}}</td>
 
         </tr>
     {% endfor %}
